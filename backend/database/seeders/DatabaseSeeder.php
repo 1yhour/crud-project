@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-
+use App\Models\Student;
+use App\Models\Course;
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -15,11 +16,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $std = Student::factory(20)->create();
+        $course = Course::factory(10)->create();
+        $std->each(function ($st) use ($course){
+            $st->courses()->attach($course->random(rand(1,5))->pluck('id'));
+        });
     }
 }
